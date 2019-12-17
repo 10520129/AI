@@ -61,10 +61,9 @@ app = Flask(__name__)  # __name__ 代表目前執行的模組
 
 ###=== (5.3) LINE介面密碼 ===### (參考3.3)
 ##== (1) Channel Access Token
-line_bot_api = LineBotApi("+kRotuWnFhR/MrMaKxfWXUJwdBQiks6G69ZP9iKy10yW/jFlDfzWatI8gkve82aYsP/jPFnSc05MqdA0Qx+MhKHGOc5QICN89ZXMdqdf/Tc2KaoNsC3nknihTJTQweMRcA+lYJj0OTqdROqrwK/UDQdB04t89/1O/w1cDnyilFU=")  #-- YOUR_CHANNEL_ACCESS_TOKEN
+line_bot_api = LineBotApi("Su7C/KeHlykwq0AwBinAZQ/lqkBn/gmufc7+J+NuzvU3euHnYvp/9Wdvwd+Xq9e9ePqzBdzTYe6oxeOsy8gMaK43wNbJ8iIDUnpwMY1FDKkQKrRfK/jAp95kGWyAoxfC1hJulBL6Ts9lWrXXfkcs/wdB04t89/1O/w1cDnyilFU=")
 ##== (2) Channel Secret
-handler = WebhookHandler("b1541ea343f16f41afd8152374581865")  #-- YOUR_CHANNEL_SECRET
-
+handler = WebhookHandler("73e5b02eec568c95b0602453d7699e3f")
 ###=== (5.4) 監聽來自 /callback 的 Post Request  ===###
 @app.route("/callback", methods=['POST']) 
 def callback():
@@ -90,18 +89,61 @@ def handle_message(event):
     if event.message.id == "100001":
         return
     text = event.message.text
-    if (text=="Hi"):
-        reply_text = "Hello"
-        #Your user ID
-    elif(text=="你好"): 
-        reply_text = "你好啊..."
-    elif(text=="機器人"):
-        reply_text = "有！我是機器人，在！"
-    else:  # 如果非以上的選項，就會學你說話
+    happy = ["可愛","喜歡","愛","乖"]
+    sad = ["討厭","拋棄","丟掉"]
+    h = 0
+    for i in happy:
+        if text.find(i) != -1:
+            if text[text.find(i)-1] != "不":
+               h = 1
+               break
+            else:
+                h = -1
+                break     
+    for i in sad:
+        if h == 1:
+            break
+        if text.find(i) != -1:
+            if text[text.find(i)-1] != "不":
+                h = -1
+                break
+            else:
+                h = 0
+                break
+    if h == 1:
+        reply_text = "^__^"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    elif h == -1:
+        reply_text = "T__T"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    h = 0
+    if (text.find("壞") != -1):
+        line_bot_api.reply_message(event.reply_token, StickerSendMessage(package_id=11537, sticker_id=52002746))
+    elif (text.find("狗狗") != -1):
+        reply_text = "凹嗚～"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+        # Your user ID
+    elif(text.find("吃飯") != -1): 
+        reply_text = "（踏踏踏踏...）"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    elif(text.find("散步") != -1):
+        reply_text = "汪！"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    elif(text.find("握手") != -1):
+        reply_text = "（伸出右手）"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    elif(text.find("左") != -1):
+        reply_text = "（伸出左手）"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    elif(text.find("右") != -1):
+        reply_text = "（伸出右手）"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+    else: # 如果非以上的選項，就會學你說話
         reply_text = text
-    print(reply_text)
-    message = TextSendMessage(reply_text)
-    line_bot_api.reply_message(event.reply_token, message)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+        # line_bot_api.push_message(event.push_token, StickerSendMessage(package_id=3, sticker_id=203)) 
+    # message = TextSendMessage(reply_text)
+    # line_bot_api.reply_message(event.reply_token, message)
 
 ###=== (5.6) 執行程式  ===###
 import os
