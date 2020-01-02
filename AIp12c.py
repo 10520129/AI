@@ -120,11 +120,11 @@ def handle_message(event):
     if(text.find("我是") != -1):
         cons.insert_NameByID(text[2:], user_id)
         reply_text = f"汪汪汪~~(對{text[2:]}撒嬌)"
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+        line_bot_api.push_message(user_id, TextSendMessage(reply_text))
 
     elif name == None:
         reply_text = "汪汪??汪?(牠好像還不知道你的名字)"
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(reply_text))
+        line_bot_api.push_message(user_id, TextSendMessage(reply_text))
 
     elif h == 1:
         reply_text = "^__^"
